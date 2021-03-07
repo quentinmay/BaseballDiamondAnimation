@@ -9,14 +9,16 @@ import javax.swing.*;
 public class AppUI extends JFrame implements ActionListener {
     
     private JPanel pnlTitle = new JPanel();
-    private JPanel pnlField = new JPanel();
+    private Quad pnlField = new Quad();
     private JPanel pnlControl = new JPanel();
-    
+    private Clockhandlerclass clockhandler;
     
     private JTextField inputSpeedTextField = new JTextField();
     
     private JButton startButton = new JButton("Start");
     private JButton quitButton = new JButton("Quit");
+    
+    private Timer timer;
     
     public AppUI() {
         
@@ -39,7 +41,6 @@ public class AppUI extends JFrame implements ActionListener {
         pnlField.setBackground(Color.GREEN);
         pnlField.setLayout(new GridLayout(4, 2, 5, 5));
         
-        
         /*
         Control Panel Setup
         */
@@ -58,22 +59,35 @@ public class AppUI extends JFrame implements ActionListener {
         quitButton.setBackground(Color.RED);
         quitButton.addActionListener(this);
         
-        
+        clockhandler = new Clockhandlerclass();
+        timer = new Timer(10, clockhandler);
         this.setSize(1920,1040);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setTitle("223J Assignment 2");
         this.setVisible(true); 
     }
-
     
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == startButton) {
             System.out.println("Start Button called");
-            
+            pnlField.initializeBall(Double.parseDouble(inputSpeedTextField.getText())); // needs to be switched to the double parser that the professor prefers.
+            timer.start();
         } else if (e.getSource() == quitButton) {
             System.exit(0);
         }
     }
+    
+     private class Clockhandlerclass implements ActionListener {   
+         public void actionPerformed(ActionEvent event) {
+             
+             if (event.getSource() == timer) {
+                 pnlField.repaint();
+             }
+              }
+     }
+    
+
+
     
 }
