@@ -88,7 +88,7 @@ public class AppUI extends JFrame implements ActionListener {
         /*
         Control Panel Setup
         */
-        pnlControl.setBackground(Color.RED);
+        pnlControl.setBackground(Color.PINK);
         pnlControl.setLayout(new GridLayout(1, 4, 5, 5));
         
         
@@ -119,10 +119,16 @@ public class AppUI extends JFrame implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == startButton) {
             if (startButton.getText() == "Start") { //When click start, initialize the ball then change the text to pause
-                startButton.setText("Pause");
-                System.out.println("Start Button called");
-                pnlField.initializeBall(Double.parseDouble(inputSpeedTextField.getText())); // needs to be switched to the double parser that the professor prefers.
-                timer.start();
+                try {
+                    double speed = Double.parseDouble(inputSpeedTextField.getText());
+                    if (Double.isNaN(speed) || speed <= 0) throw new Exception(); // If the inputSpeed isnt a double or speed is negative or zero, throw an error;
+                    pnlField.initializeBall(speed); // needs to be switched to the double parser that the professor prefers.
+                    startButton.setText("Pause");
+                    System.out.println("Start Button called");
+                    timer.start();
+                } catch (Exception err) {
+                    inputSpeedTextField.setText("ERROR");
+                }
             } else if (startButton.getText() == "Pause") { //When paused, just stop timer and change button to resume.
                 timer.stop();
                 startButton.setText("Resume");

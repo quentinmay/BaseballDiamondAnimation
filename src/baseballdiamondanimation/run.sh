@@ -27,7 +27,7 @@ javac Computations.java
 echo Compile Quad.java
 javac Quad.java
 
-echo Execute the Payroll Calculator
+echo Execute the Baseball Diamond Runner
 java main.java
 
 echo End of execution.
