@@ -82,14 +82,16 @@ public class Quad extends JPanel {
     public void initializeBall(double pixPerSec) {
             running = true;
             this.pixPerSec = pixPerSec;
+            distance_traveled_per_tic = pixPerSec / 100;
+            ballPosition.setLocation(points[0].x, points[0].y);
+            nextPoint = new Point(points[1]);
+            
             Computations comp = new Computations();
             double[] delta = comp.computeDelta(new Point((int)ballPosition.getX(), (int)ballPosition.getY()), nextPoint, pixPerSec);
             System.out.println("rise:" + delta[1] + " / run:" + delta[0]);
             deltaX = delta[0];
             deltaY = delta[1];
-            ballPosition.setLocation(points[0].x, points[0].y);
-            nextPoint = new Point(points[1]);
-            distance_traveled_per_tic = pixPerSec / 100;
+            
 
     }
 }

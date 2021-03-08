@@ -94,8 +94,8 @@ public class AppUI extends JFrame implements ActionListener {
                  if (pnlField.isRunning()) {
                      pnlField.repaint();
                  } else {
-                     timer.stop();
                      startButton.setText("Start");
+                     timer.stop();
                  }
                  
                  
