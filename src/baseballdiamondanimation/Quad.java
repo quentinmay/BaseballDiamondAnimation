@@ -70,26 +70,31 @@ public class Quad extends JPanel {
         ballPosition.setLocation(points[0].x, points[0].y);
         nextPoint = new Point(points[1]);
     }
+    
+    
     public void paintComponent(Graphics g) {
-        
-    Computations comp = new Computations();
+        Computations comp = new Computations();
         super.paintComponent(g);
+        //This for loop is only used to draw the Base ball diamond lines.
         for (int i = 0; i < 4; i++) {
-            if (i == 3)
+            if (i == 3) { //For the last line, draw it using point 3 and point 0 (home base).
                 g.drawLine(points[i].x, points[i].y, points[0].x, points[0].y);
-                else
-            g.drawLine(points[i].x, points[i].y, points[i+1].x, points[i+1].y);
+            }
+            else { //For the first 3 lines, draw it using the starting point and the next point.
+                g.drawLine(points[i].x, points[i].y, points[i+1].x, points[i+1].y);
+            }
             
         }
         g.setColor(Color.ORANGE);
         if (Math.sqrt(Math.pow((double)ballPosition.getX() - nextPoint.x, 2) + Math.pow((double)ballPosition.getY() - nextPoint.y, 2)) <= distance_traveled_per_tic) {
-            
-            System.out.println("too close to point. Just teleport to the spot then recalculate.");
+            //At this point, we are too close to the nextPoint, so we just goto the base and change our nextPoint to the next base.
+            //System.out.println("too close to point. Just teleport to the spot then recalculate.");
             ballPosition.setLocation(nextPoint.x, nextPoint.y);
             for (int i = 0; i < points.length; i++) {
                     if (!nextPoint.equals(points[1])) {
                         if (ballPosition.getX() == points[0].x && ballPosition.getY() == points[0].y) {
-                            System.out.println("Returned home");
+                            //This only gets called once weve returned home.
+//                            System.out.println("Returned home");
                             running = false;
                             g.fillOval((int)ballPosition.getX() - ballRadius, (int)ballPosition.getY() - ballRadius, ballRadius*2, ballRadius*2);
                             return;
@@ -108,16 +113,16 @@ public class Quad extends JPanel {
             
             g.fillOval((int)ballPosition.getX() - ballRadius, (int)ballPosition.getY() - ballRadius, ballRadius*2, ballRadius*2);
             double[] delta = comp.computeDelta(new Point((int)ballPosition.getX(), (int)ballPosition.getY()), nextPoint, pixPerSec);
-            System.out.println("rise:" + delta[1] + " / run:" + delta[0]);
             deltaX = delta[0];
             deltaY = delta[1];
-        } else {
+        } else { //If the distance to next base ISNT lower than distance traveled per tic, then we just move normally.
             ballPosition.setLocation(ballPosition.getX() + deltaX, ballPosition.getY() + deltaY);
             g.fillOval((int)ballPosition.getX() - ballRadius, (int)ballPosition.getY() - ballRadius, ballRadius*2, ballRadius*2);
         }
             
     }
     
+    //Utility used by our AppUI to check if the runner is still running.
     public boolean isRunning() {
         return running;
     }
@@ -132,7 +137,7 @@ public class Quad extends JPanel {
             
             Computations comp = new Computations();
             double[] delta = comp.computeDelta(new Point((int)ballPosition.getX(), (int)ballPosition.getY()), nextPoint, pixPerSec);
-            System.out.println("rise:" + delta[1] + " / run:" + delta[0]);
+//            System.out.println("rise:" + delta[1] + " / run:" + delta[0]);
             deltaX = delta[0];
             deltaY = delta[1];
             
