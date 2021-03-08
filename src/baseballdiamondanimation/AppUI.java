@@ -60,7 +60,7 @@ public class AppUI extends JFrame implements ActionListener {
         quitButton.addActionListener(this);
         
         clockhandler = new Clockhandlerclass();
-        timer = new Timer(10, clockhandler);
+        timer = new Timer(10, clockhandler); //Cant change speed that it updates without changing the distance travelled manually in Quad.
         this.setSize(1920,1040);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setTitle("223J Assignment 2");
@@ -70,9 +70,18 @@ public class AppUI extends JFrame implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == startButton) {
-            System.out.println("Start Button called");
-            pnlField.initializeBall(Double.parseDouble(inputSpeedTextField.getText())); // needs to be switched to the double parser that the professor prefers.
-            timer.start();
+            if (startButton.getText() == "Start") {
+                startButton.setText("Pause");
+                System.out.println("Start Button called");
+                pnlField.initializeBall(Double.parseDouble(inputSpeedTextField.getText())); // needs to be switched to the double parser that the professor prefers.
+                timer.start();
+            } else if (startButton.getText() == "Pause") {
+                timer.stop();
+                startButton.setText("Resume");
+            } else if (startButton.getText() == "Resume") {
+                timer.start();
+                startButton.setText("Pause");
+            }
         } else if (e.getSource() == quitButton) {
             System.exit(0);
         }
@@ -82,9 +91,16 @@ public class AppUI extends JFrame implements ActionListener {
          public void actionPerformed(ActionEvent event) {
              
              if (event.getSource() == timer) {
-                 pnlField.repaint();
-             }
-              }
+                 if (pnlField.isRunning()) {
+                     pnlField.repaint();
+                 } else {
+                     timer.stop();
+                     startButton.setText("Start");
+                 }
+                 
+                 
+            }
+        }
      }
     
 

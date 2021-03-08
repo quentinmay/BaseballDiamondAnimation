@@ -16,21 +16,26 @@ public class Quad extends JPanel {
         private double distance_traveled_per_tic;
         private Point nextPoint;
         private double pixPerSec;
+        private boolean running;
         
     public Quad() {
         points[0] = new Point(960, 900);
         points[1] = new Point(1360, 500);
         points[2] = new Point(960, 100);
         points[3] = new Point(560, 500);
-        points[4] = new Point(960, 900);
         ballPosition.setLocation(points[0].x, points[0].y);
         nextPoint = new Point(points[1]);
     }
     public void paintComponent(Graphics g) {
+        
     Computations comp = new Computations();
         super.paintComponent(g);
         for (int i = 0; i < 4; i++) {
+            if (i == 3)
+                g.drawLine(points[i].x, points[i].y, points[0].x, points[0].y);
+                else
             g.drawLine(points[i].x, points[i].y, points[i+1].x, points[i+1].y);
+            
         }
         g.setColor(Color.ORANGE);
         if (Math.sqrt(Math.pow((double)ballPosition.getX() - nextPoint.x, 2) + Math.pow((double)ballPosition.getY() - nextPoint.y, 2)) <= distance_traveled_per_tic) {
@@ -38,13 +43,23 @@ public class Quad extends JPanel {
             System.out.println("too close to point. Just teleport to the spot then recalculate.");
             ballPosition.setLocation(nextPoint.x, nextPoint.y);
             for (int i = 0; i < points.length; i++) {
-                if (i < 4) {
-                    if(nextPoint.equals(points[i])) {
-                        System.out.println("found next point: " + points[i+1]);
-                        nextPoint = new Point(points[i+1]);
-                        break;
+                    if (!nextPoint.equals(points[1])) {
+                        if (ballPosition.getX() == points[0].x && ballPosition.getY() == points[0].y) {
+                            System.out.println("Returned home");
+                            running = false;
+                            g.fillOval((int)ballPosition.getX() - ballRadius, (int)ballPosition.getY() - ballRadius, ballRadius*2, ballRadius*2);
+                            return;
+                        }
                     }
-                }
+                        if (running == true){
+                            if(nextPoint.equals(points[i])) {
+                                if (i == 3) nextPoint = new Point(points[0]);
+                                else
+                                    nextPoint = new Point(points[i+1]);
+                                break;
+                            }
+                        }
+                
             }
             
             g.fillOval((int)ballPosition.getX() - ballRadius, (int)ballPosition.getY() - ballRadius, ballRadius*2, ballRadius*2);
@@ -59,9 +74,13 @@ public class Quad extends JPanel {
             
     }
     
+    public boolean isRunning() {
+        return running;
+    }
+    
     //Call this function from the main class before running
     public void initializeBall(double pixPerSec) {
-            
+            running = true;
             this.pixPerSec = pixPerSec;
             Computations comp = new Computations();
             double[] delta = comp.computeDelta(new Point((int)ballPosition.getX(), (int)ballPosition.getY()), nextPoint, pixPerSec);
